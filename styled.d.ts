@@ -8,6 +8,7 @@ declare module "styled-components" {
       altBackground?: string;
       text?: string;
       altText?: string;
+      activeBackground?: string;
     };
     addClass?: any;
     shrink?: any;

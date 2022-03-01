@@ -1,6 +1,8 @@
 import { HTMLAttributes, useRef, useState } from "react";
 import styled from "styled-components";
 import { gsap } from "gsap";
+import Link from "next/link";
+import { useRouter } from "next/router";
 
 interface OptionProps extends HTMLAttributes<HTMLHeadingElement> {
   active?: any;
@@ -53,8 +55,9 @@ const IconWrapper = styled.div`
 `;
 
 const OptionOuter = styled.div``;
-const Option = styled.div`
+const Option = styled.a`
   ${(props: OptionProps) => `
+  text-decoration: none;
   height: 3rem;
   display: flex;
   align-items: center;
@@ -111,23 +114,12 @@ const OptionArrow = styled.div`
 `;
 
 const SideBar = ({ shrink, setShrink }: any) => {
+  const router = useRouter();
   const animRef = useRef<any>(null);
   let tl: GSAPTimeline;
   tl = gsap.timeline({ paused: true });
 
   const [droppedItems, setDroppedItems] = useState<any>([]);
-
-  /*
-
-const exItems = state.items ? state.items : [];
-      const filtered =
-        exItems &&
-        exItems.filter((item: ItemType) => item.id !== action.payload.id);
-      return {
-        items: filtered,
-      };
-
-      */
 
   const removeFromDroppedItems = (key: any) => {
     const filtered =
@@ -159,7 +151,6 @@ const exItems = state.items ? state.items : [];
         }
       });
     }
-    console.log(found);
     return found;
   };
 
@@ -172,6 +163,7 @@ const exItems = state.items ? state.items : [];
           <path d="M10 20v-6h4v6h5v-8h3L12 3 2 12h3v8z" />
         </Svg>
       ),
+      to: "/home",
     },
     {
       name: "Characters",
@@ -204,6 +196,7 @@ const exItems = state.items ? state.items : [];
           <path d="M3 13h2v-2H3v2zm0 4h2v-2H3v2zm0-8h2V7H3v2zm4 4h14v-2H7v2zm0 4h14v-2H7v2zM7 7v2h14V7H7z" />
         </Svg>
       ),
+      to: "/factions",
     },
   ];
 
@@ -271,33 +264,42 @@ const exItems = state.items ? state.items : [];
                 clickedOption(opt, key);
               }}
             >
-              <Option>
-                <IconWrapper shrink={shrink ? 1 : 0}>
-                  {opt.icon && opt.icon}
-                </IconWrapper>{" "}
-                {!shrink && opt.name && opt.name}
-                {opt.dropOptions && !shrink && (
-                  <OptionArrow>
-                    {isDropped(key) ? (
-                      <Svg
-                        xmlns="http://www.w3.org/2000/svg"
-                        viewBox="0 0 24 24"
-                      >
-                        <path d="M0 0h24v24H0z" fill="none" />
-                        <path d="M12 8l-6 6 1.41 1.41L12 10.83l4.59 4.58L18 14z" />
-                      </Svg>
-                    ) : (
-                      <Svg
-                        xmlns="http://www.w3.org/2000/svg"
-                        viewBox="0 0 24 24"
-                      >
-                        <path d="M0 0h24v24H0z" fill="none" />
-                        <path d="M16.59 8.59L12 13.17 7.41 8.59 6 10l6 6 6-6z" />
-                      </Svg>
-                    )}
-                  </OptionArrow>
-                )}
-              </Option>
+              <Link href={opt.to ? opt.to : "#"} passHref>
+                <Option
+                  active={
+                    (opt.to && router.pathname === opt.to) ||
+                    (opt.to && router.pathname.substring(1).startsWith(opt.to))
+                      ? 1
+                      : 0
+                  }
+                >
+                  <IconWrapper shrink={shrink ? 1 : 0}>
+                    {opt.icon && opt.icon}
+                  </IconWrapper>{" "}
+                  {!shrink && opt.name && opt.name}
+                  {opt.dropOptions && !shrink && (
+                    <OptionArrow>
+                      {isDropped(key) ? (
+                        <Svg
+                          xmlns="http://www.w3.org/2000/svg"
+                          viewBox="0 0 24 24"
+                        >
+                          <path d="M0 0h24v24H0z" fill="none" />
+                          <path d="M12 8l-6 6 1.41 1.41L12 10.83l4.59 4.58L18 14z" />
+                        </Svg>
+                      ) : (
+                        <Svg
+                          xmlns="http://www.w3.org/2000/svg"
+                          viewBox="0 0 24 24"
+                        >
+                          <path d="M0 0h24v24H0z" fill="none" />
+                          <path d="M16.59 8.59L12 13.17 7.41 8.59 6 10l6 6 6-6z" />
+                        </Svg>
+                      )}
+                    </OptionArrow>
+                  )}
+                </Option>
+              </Link>
               {opt.dropOptions && !shrink && (
                 <DropOption addClass={`dropOption${key}`}>
                   {opt.dropOptions.map((dropOpt, dropKey) => {
