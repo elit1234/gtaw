@@ -99,7 +99,10 @@ const DropOption = styled.div.attrs((props: any) => ({
 `;
 
 const DropOptionOption = styled.div`
-  padding-left: 3rem;
+  padding: 0.3rem 0 0.3rem 3rem;
+  font-size: 12px;
+  color: ${(props) => props.theme.colors.altText};
+  cursor: pointer;
 `;
 
 const OptionArrow = styled.div`
@@ -169,6 +172,15 @@ const exItems = state.items ? state.items : [];
           <path d="M10 20v-6h4v6h5v-8h3L12 3 2 12h3v8z" />
         </Svg>
       ),
+    },
+    {
+      name: "Characters",
+      icon: (
+        <Svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
+          <path d="M0 0h24v24H0z" fill="none" />
+          <path d="M12 12c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm0 2c-2.67 0-8 1.34-8 4v2h16v-2c0-2.66-5.33-4-8-4z" />
+        </Svg>
+      ),
       dropOptions: [
         {
           name: "Dashboard",
@@ -183,15 +195,6 @@ const exItems = state.items ? state.items : [];
           name: "Joe Rogan",
         },
       ],
-    },
-    {
-      name: "Characters",
-      icon: (
-        <Svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
-          <path d="M0 0h24v24H0z" fill="none" />
-          <path d="M12 12c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm0 2c-2.67 0-8 1.34-8 4v2h16v-2c0-2.66-5.33-4-8-4z" />
-        </Svg>
-      ),
     },
     {
       name: "Factions",
@@ -219,7 +222,7 @@ const exItems = state.items ? state.items : [];
               {
                 autoAlpha: 1,
                 height: "100%",
-                padding: "1rem 0",
+                padding: "0.5rem 0",
                 ease: "Power1.inOut",
               }
             )

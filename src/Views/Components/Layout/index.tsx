@@ -16,8 +16,8 @@ const Wrapper = styled.div`
 
 const Content = styled.div`
   ${(props: ContentProps) => `
-  ${props.shrink ? `padding-left: 100px` : `padding-left: 250px;`}
-  padding-top: 5rem;`}
+  ${props.shrink ? `padding: 5rem 0 0 100px` : `padding: 5rem 0 0 250px;`}
+  `}
 `;
 
 const TopBar = styled.div`
