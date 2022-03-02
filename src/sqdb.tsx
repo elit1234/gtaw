@@ -1,31 +1,33 @@
 import sqlite3 from "sqlite3";
-import path from "path";
 
-sqlite3.verbose();
+const db = new sqlite3.Database("db.db");
 
-let db: sqlite3.Database;
+export const SQLGet = async (query: string) => {
+  return new Promise(function (resolve, reject) {
+    db.all(query, function (err, rows) {
+      if (err) return reject(err);
+      else resolve(rows);
+    });
+  });
+};
 
-// db = new sqlite3.Database(":memory:");
-
-export const OpenDatabase = () =>
-  (db = new sqlite3.Database(
-    path.resolve(__dirname, "db.db"),
-    sqlite3.OPEN_READWRITE
-  ));
-
-console.log(path.resolve(__dirname));
-
-export const CloseDatabase = () => db.close();
-
-export const SQLiteQuery = async (query: string) =>
-  new Promise((resolve, reject) => {
-    OpenDatabase();
-    db.all(query, (err, row) => {
+export const SQLUpdate = async (query: string, values?: any[]) => {
+  return new Promise(function (resolve, reject) {
+    db.run(query, values, function (err) {
       if (err) {
+        console.log(err);
         reject(err);
       } else {
-        resolve(row);
+        resolve({ id: this.lastID });
       }
     });
-    CloseDatabase();
+    // db.run(query, values, function (err: any, rows: any) {
+    //   if (err) return reject(err);
+    //   else {
+    //     resolve(rows);
+    //   }
+    // });
   });
+};
+
+export default db;

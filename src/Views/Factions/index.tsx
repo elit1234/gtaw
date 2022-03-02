@@ -4,8 +4,21 @@ import { useRouter } from "next/router";
 import { HTMLAttributes, useEffect, useState } from "react";
 import styled from "styled-components";
 import Layout from "../Components/Layout";
+import createFaction from "../func/createFaction";
 import getFactionType from "../func/getFactionType";
 import loadFactions from "../func/loadFactions";
+import {
+  Input,
+  InputContainer,
+  InputsWrapper,
+  Option,
+  Placeholder,
+  Select,
+  Title,
+} from "./EditDetails";
+import { SaveButton } from "./EditLeaders";
+import { setFaction, useAppDispatch } from "../../redux/user";
+import { useSelector } from "react-redux";
 
 interface ListOptionProps extends HTMLAttributes<HTMLHeadingElement> {
   active?: any;
@@ -75,15 +88,33 @@ const SelectedName = styled.div`
   font-size: 18px;
   text-decoration: underline;
 `;
+const Svg = styled.svg`
+  width: 45px;
+  height: 45px;
+  fill: #008000;
+`;
+
+const Creating = styled.div`
+  padding: 1rem;
+  width: 100%;
+`;
+
 const Factions: NextPage = () => {
+  const user = useSelector((state: any) => state.user);
+  const dispatch = useAppDispatch();
   const router = useRouter();
 
   const [factions, setFactions] = useState<[FactionType]>();
   const [selected, setSelected] = useState<FactionType>();
+  const [creating, setCreating] = useState<boolean>(false);
 
-  const [faction, setFaction] = useState<FactionType>();
+  const [values, setValues] = useState<FactionType>({
+    name: "",
+    type: 0,
+  });
 
   const loadData = async () => {
+    setSelected(undefined);
     const query = await loadFactions();
     return setFactions(query);
   };
@@ -95,16 +126,42 @@ const Factions: NextPage = () => {
   const clickedSelectOpt = (opt: number) => {
     let url: string = "/factions";
     if (selected && opt) {
-      if (opt === 1) {
-        url = `${url}/editDetails/${selected.id}`;
-      } else if (opt === 2) {
-        url = `${url}/editLeaders/${selected.id}`;
-      } else if (opt === 3) {
-        url = `${url}/editAbilities/${selected.id}`;
-      }
+      if (opt === 1) url = `${url}/editDetails/${selected.id}`;
+      else if (opt === 2) url = `${url}/editLeaders/${selected.id}`;
+      else if (opt === 3) url = `${url}/editAbilities/${selected.id}`;
     }
     url && router.push(url);
   };
+
+  const clickedAddNew = () => {
+    setCreating(true);
+    dispatch(setFaction(undefined));
+    setSelected(undefined);
+  };
+
+  const clickedCreate = async () => {
+    const created = await createFaction(values);
+    console.log(created);
+    if (created) {
+      router.push("/factions/editDetails/" + created);
+    }
+  };
+
+  const handleInputChange = (target: string, value: any) => {
+    setValues({
+      ...values,
+      [target]: value,
+    });
+  };
+
+  useEffect(() => {
+    const { selectedFaction } = user;
+    if (selectedFaction) {
+      if (selected && selectedFaction === selected) return;
+      setSelected(selectedFaction);
+    }
+  }, [user]);
+
   return (
     <Layout>
       <Head>
@@ -113,21 +170,32 @@ const Factions: NextPage = () => {
       <Wrapper>
         <List>
           {factions &&
+            factions[0] &&
             factions.map((faction: FactionType, key) => {
               return (
                 <ListOption
-                  active={selected && selected === faction ? 1 : 0}
+                  active={selected && selected.id === faction.id ? 1 : 0}
                   key={key}
                   onClick={() => {
-                    if (selected !== faction) setSelected(faction);
+                    if (selected !== faction) {
+                      setSelected(faction);
+                      dispatch(setFaction(faction));
+                      setCreating(false);
+                    }
                   }}
                 >
                   {faction.name && faction.name}
                 </ListOption>
               );
             })}
+          <ListOption onClick={() => clickedAddNew()}>
+            <Svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
+              <path d="M0 0h24v24H0V0z" fill="none" />
+              <path d="M19 13h-6v6h-2v-6H5v-2h6V5h2v6h6v2z" />
+            </Svg>
+          </ListOption>
         </List>
-        {selected && (
+        {selected && !creating && (
           <SelectedOptions>
             <SelectedName>
               {selected.name} - {getFactionType(selected.type)}
@@ -142,6 +210,43 @@ const Factions: NextPage = () => {
               Edit Faction Abilities
             </SelectedOption>
           </SelectedOptions>
+        )}
+        {creating && !selected && (
+          <Creating>
+            <Title>Create Faction</Title>
+            <InputsWrapper>
+              <InputContainer>
+                <Placeholder>Faction Name</Placeholder>
+                <Input
+                  placeholder="Faction Name"
+                  value={values.name}
+                  onChange={(e) => handleInputChange("name", e.target.value)}
+                />
+              </InputContainer>
+              <InputContainer>
+                <Placeholder>Faction Type</Placeholder>
+                <Select
+                  value={values.type}
+                  onChange={(e) => handleInputChange("type", e.target.value)}
+                >
+                  <Option value={0} disabled>
+                    Please choose
+                  </Option>
+                  {Array.from(Array(5), (e, i) => {
+                    if (i > 0)
+                      return (
+                        <Option value={i} key={i}>
+                          {getFactionType(i)}
+                        </Option>
+                      );
+                  })}
+                </Select>
+              </InputContainer>
+            </InputsWrapper>
+            <SaveButton onClick={() => clickedCreate()}>
+              Create Faction
+            </SaveButton>
+          </Creating>
         )}
       </Wrapper>
     </Layout>

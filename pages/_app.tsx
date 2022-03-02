@@ -1,5 +1,6 @@
 import "./fonts.css";
 import type { AppProps } from "next/app";
+import { wrapper } from "../src/redux/store";
 
 import {
   createGlobalStyle,
@@ -30,6 +31,9 @@ function MyApp({ Component, pageProps }: AppProps) {
     colors: {
       background: "#1D2127",
       altBackground: "#21262D",
+      activeBackground: "#2c323c",
+      lightBackground: "#424b59",
+      lightActiveBackground: "#4d5768",
       text: "#fff",
       altText: "#ABB4BE",
     },
@@ -51,4 +55,6 @@ function MyApp({ Component, pageProps }: AppProps) {
   );
 }
 
-export default MyApp;
+MyApp.getInitialProps = wrapper.getInitialAppProps();
+
+export default wrapper.withRedux(MyApp);

@@ -1,18 +1,17 @@
 import { NextApiRequest, NextApiResponse } from "next";
-import { SQLiteQuery } from "../../src/sqdb";
+import { SQLGet } from "../../src/sqdb";
 export default async function handler(
   req: NextApiRequest,
   res: NextApiResponse
 ) {
   let factions: any = [];
 
-  const { id }: any = req.body;
+  const loadData = async (): Promise<FactionType[]> => {
+    let factions: any = [];
+    const str = `SELECT * FROM factions`;
 
-  const loadData = async (): Promise<any> => {
-    console.log(req.body);
-    const str = `SELECT id, name, type FROM factions`;
-    const factionQuery = await SQLiteQuery(str);
-    return factionQuery;
+    factions = await SQLGet(str);
+    return factions;
   };
 
   factions = await loadData();
