@@ -135,15 +135,15 @@ const Factions: NextPage = () => {
 
   const clickedAddNew = () => {
     setCreating(true);
-    dispatch(setFaction(undefined));
     setSelected(undefined);
   };
 
   const clickedCreate = async () => {
+    console.log(values);
     const created = await createFaction(values);
-    console.log(created);
-    if (created) {
-      router.push("/factions/editDetails/" + created);
+
+    if (created && created.id) {
+      router.push("/factions/editDetails/" + created.id);
     }
   };
 
@@ -157,10 +157,12 @@ const Factions: NextPage = () => {
   useEffect(() => {
     const { selectedFaction } = user;
     if (selectedFaction) {
-      if (selected && selectedFaction === selected) return;
-      setSelected(selectedFaction);
+      factions &&
+        factions.map((faction) => {
+          if (faction.id === selectedFaction.id) return setSelected(faction);
+        });
     }
-  }, [user]);
+  }, [user, factions]);
 
   return (
     <Layout>
@@ -170,7 +172,6 @@ const Factions: NextPage = () => {
       <Wrapper>
         <List>
           {factions &&
-            factions[0] &&
             factions.map((faction: FactionType, key) => {
               return (
                 <ListOption

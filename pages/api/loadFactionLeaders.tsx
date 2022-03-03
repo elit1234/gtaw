@@ -1,5 +1,5 @@
 import { NextApiRequest, NextApiResponse } from "next";
-import { SQLiteQuery } from "../../src/sqdb";
+import { SQLGet } from "../../src/sqdb";
 export default async function handler(
   req: NextApiRequest,
   res: NextApiResponse
@@ -9,9 +9,10 @@ export default async function handler(
   const { id }: any = req.body;
 
   const loadData = async (): Promise<any> => {
-    const str = `SELECT * FROM users WHERE faction=${Number(id)}`;
-    console.log(str);
-    const factionQuery = await SQLiteQuery(str);
+    console.log("loading faction leaders for fac id: " + id);
+    const str = `SELECT * FROM users WHERE faction=? AND leader=1`;
+    const factionQuery = await SQLGet(str, [id]);
+    console.log(factionQuery);
     return factionQuery;
   };
 

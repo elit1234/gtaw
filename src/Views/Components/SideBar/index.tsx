@@ -20,6 +20,11 @@ interface IconProps extends HTMLAttributes<HTMLHeadingElement> {
   theme?: any;
 }
 
+interface DropOptionProps extends HTMLAttributes<HTMLHeadingElement> {
+  addClass?: any;
+  className?: any;
+}
+
 const Wrapper = styled.div`
   ${(props: WrapperProps) => `position: fixed;
   left: 0;
@@ -94,11 +99,11 @@ const Svg = styled.svg`
   height: 24px;
 `;
 
-const DropOption = styled.div.attrs((props: any) => ({
+const DropOption = styled.div.attrs((props: DropOptionProps) => ({
   className: props.addClass ? props.addClass : "",
 }))`
-  height: 0;
-  visibility: hidden;
+  ${(props: DropOptionProps) => `height: 0;
+visibility: hidden;`}
 `;
 
 const DropOptionOption = styled.div`
@@ -124,10 +129,7 @@ const SideBar = ({ shrink, setShrink }: any) => {
   const removeFromDroppedItems = (key: any) => {
     const filtered =
       droppedItems && droppedItems.filter((item: any) => item !== key);
-    console.log(droppedItems);
 
-    console.log("filtered:");
-    console.log(filtered);
     return setDroppedItems(filtered);
   };
 

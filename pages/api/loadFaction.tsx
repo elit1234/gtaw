@@ -22,7 +22,6 @@ export default async function handler(
   const loadData = async (): Promise<any> => {
     const str = `SELECT id, name, type FROM factions WHERE id=${id}`;
     const factions = await SQLGet(str);
-    console.log(factions);
     return factions;
   };
 

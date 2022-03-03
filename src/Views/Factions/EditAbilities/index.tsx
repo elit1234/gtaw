@@ -64,7 +64,6 @@ const EditAbilities = ({ id }: any) => {
     if (JSON.stringify(values) === JSON.stringify(abilities)) {
       alert("You have made no changes!");
     } else {
-      console.log("made changes");
       saveFactionAbilities(values, id);
       router.push("/factions");
     }

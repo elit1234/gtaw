@@ -6,16 +6,11 @@ export default async function handler(
 ) {
   let result: any;
 
-  const { values }: any = req.body;
+  const { id }: any = req.body;
 
   const updateData = async (): Promise<any> => {
-    const str = `UPDATE factions SET name = ?, type = ? WHERE id = ?`;
-
-    const factionQuery = await SQLUpdate(str, [
-      values.name,
-      values.type,
-      values.id,
-    ]);
+    const str = `UPDATE users SET leader=0 WHERE id=?`;
+    const factionQuery = await SQLUpdate(str, [id]);
     return factionQuery;
   };
 

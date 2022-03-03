@@ -98,11 +98,11 @@ const EditDetails = ({ id }: any) => {
     });
   };
 
-  const clickedSave = () => {
+  const clickedSave = async () => {
     if (JSON.stringify(faction) === JSON.stringify(values)) {
       alert("You have not made any changes!");
     } else {
-      saveFaction(values);
+      await saveFaction(values);
       router.push("/factions");
     }
   };
