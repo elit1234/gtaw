@@ -10,8 +10,8 @@ export default async function handler(
 
   const loadData = async (): Promise<any> => {
     console.log("loading faction leaders for fac id: " + id);
-    const str = `SELECT * FROM users WHERE faction=? AND leader=1`;
-    const factionQuery = await SQLGet(str, [id]);
+    const str = `SELECT * FROM users WHERE faction=? AND leader=?`;
+    const factionQuery = await SQLGet(str, [id, id]);
     console.log(factionQuery);
     return factionQuery;
   };

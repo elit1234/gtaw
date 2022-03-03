@@ -139,11 +139,10 @@ const Factions: NextPage = () => {
   };
 
   const clickedCreate = async () => {
-    console.log(values);
     const created = await createFaction(values);
 
-    if (created && created.id) {
-      router.push("/factions/editDetails/" + created.id);
+    if (created) {
+      router.push("/factions/editDetails/" + created);
     }
   };
 
