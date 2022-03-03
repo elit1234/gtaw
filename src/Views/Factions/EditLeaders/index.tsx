@@ -196,6 +196,10 @@ const EditLeaders = ({ id }: any) => {
   useEffect(() => {
     if (id) loadData();
   }, [id]);
+
+  const reloadLeaders = () => {
+    if (id) loadData();
+  };
   return (
     <>
       <Layout>
@@ -212,7 +216,7 @@ const EditLeaders = ({ id }: any) => {
             leaders[0] &&
             leaders.map((leader: UserType, key: number) => {
               return (
-                <>
+                <div key={key}>
                   <TableRow key={key} onClick={() => clickedRow(leader)}>
                     <TableRowItem>{leader.id}</TableRowItem>
                     <TableRowItem>{leader.username}</TableRowItem>
@@ -225,7 +229,7 @@ const EditLeaders = ({ id }: any) => {
                       Remove
                     </TableRowExtendButton>
                   </TableRowExtend>
-                </>
+                </div>
               );
             })}
           {!leaders ||
@@ -233,7 +237,12 @@ const EditLeaders = ({ id }: any) => {
         </Table>
         <SaveButton onClick={() => clickedAdd()}>Add Leader</SaveButton>
       </Layout>
-      <AddWindow show={showSearch} setShow={setShowSearch} />
+      <AddWindow
+        show={showSearch}
+        setShow={setShowSearch}
+        selectedFaction={faction}
+        reloadLeaders={reloadLeaders}
+      />
     </>
   );
 };

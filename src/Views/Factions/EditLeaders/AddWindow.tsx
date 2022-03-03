@@ -2,6 +2,7 @@ import { useEffect, useRef, useState } from "react";
 import { gsap } from "gsap";
 import styled from "styled-components";
 import searchForUser from "../../func/searchForUser";
+import addUserLeader from "../../func/addUserLeader";
 
 const Outer = styled.div`
   position: absolute;
@@ -72,7 +73,7 @@ const CloseIcon = styled.div`
   }
 `;
 
-const AddWindow = ({ show, setShow }: any) => {
+const AddWindow = ({ show, setShow, selectedFaction, reloadLeaders }: any) => {
   const [query, setQuery] = useState<string>("");
   const [results, setResults] = useState<any[]>([]);
   const windowAnimRef = useRef<any>(null);
@@ -84,6 +85,14 @@ const AddWindow = ({ show, setShow }: any) => {
     console.log("searching for: " + query);
     let dbQuery = await searchForUser(query);
     if (dbQuery) setResults(dbQuery);
+  };
+
+  const clickedResultRow = async (user: UserType) => {
+    console.log(selectedFaction);
+    const result = await addUserLeader(user, selectedFaction);
+    if (result) reloadLeaders();
+
+    windowAnimRef.current.reverse();
   };
 
   useEffect(() => {
@@ -128,7 +137,7 @@ const AddWindow = ({ show, setShow }: any) => {
           {results &&
             results.map((result: UserType, key) => {
               return (
-                <ResultsRow key={key}>
+                <ResultsRow key={key} onClick={() => clickedResultRow(result)}>
                   {result.username && result.username}
                 </ResultsRow>
               );

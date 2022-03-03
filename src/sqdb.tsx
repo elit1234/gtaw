@@ -21,6 +21,8 @@ export const SQLGet = async (query: string, values?: any) => {
 };
 
 export const SQLUpdate = async (query: string, values?: any[]) => {
+  console.log("SQLUpdate query: " + query);
+  console.log("SQLUpdate values: " + JSON.stringify(values));
   return new Promise(function (resolve, reject) {
     db.run(query, values, function (err) {
       if (err) {
